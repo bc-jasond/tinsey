@@ -22,7 +22,7 @@
 </svelte:head>
 
 
-<section class="section is-fullwidth">
+<section class="section p-0 is-fullwidth">
     <div class="hero">
     <div class="hero-body has-background-info-light has-text-centered">
         <div class="container">
@@ -47,12 +47,12 @@
     </nav>
     <div class="container">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header has-background-info-light p-3">
                 <div class="card-header-title is-centered">
-                    <h1 class="title is-1">{meeting.title}</h1>
+                    <h1 class="title is-1 m-0">{meeting.title}</h1>
                 </div>
             </div>
-            <div class="card-content has-text-centered has-text-light has-background-grey">
+            <div class="card-content has-text-centered has-text-light has-background-grey p-1">
                 <div class="columns">
                     <div class="column">
                         <p class="content is-size-3">{formatDate(meeting.startTime)}</p>
@@ -67,12 +67,12 @@
 
             </div>
             <div class="card-content has-text-centered">
-                <p class="content is-size-4">{@html meeting.description}</p>
+                <p class="content is-size-4 m-6">{@html meeting.description}</p>
             </div>
 
             <div class="card-footer">
                 <div class="card-footer-item">
-                    <a class="button is-large is-link" href={meeting.meetingUrl} target="_blank" rel="noreferrer" style="height: unset;"><h1 class="is-1 m-1">Join</h1></a>
+                    <a class="button is-large is-link" href={meeting.meetingUrl} target="_blank" rel="noreferrer" style="height: unset;"><h1 class="is-1 m-1">Join Meeting</h1></a>
                 </div>
             </div>
         </div>
