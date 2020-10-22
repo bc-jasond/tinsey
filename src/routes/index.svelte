@@ -94,7 +94,7 @@
   <div class="hero">
     <div class="hero-body has-background-info-light has-text-centered">
       <div class="container">
-        <h1 class="title is-family-sans-serif" style="font-size: 4rem;">
+        <h1 class="title is-family-sans-serif m-0" style="font-size: 4rem;">
           Where am I supposed to be rn? 🤔
         </h1>
       </div>

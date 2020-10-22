@@ -9,9 +9,18 @@ import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 
+const {saneEnvironmentOrExit} = require('./src/common/utils.js');
+
+saneEnvironmentOrExit('NODE_ENV','GOOGLE_API_FILBERT_CLIENT_ID')
+
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
+
+const env = {
+	'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+	'process.env.GOOGLE_API_FILBERT_CLIENT_ID': JSON.stringify(process.env.GOOGLE_API_FILBERT_CLIENT_ID)
+}
 
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
@@ -25,7 +34,7 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				...env
 			}),
 			svelte({
 				dev,
@@ -74,7 +83,7 @@ export default {
 		plugins: [
 			replace({
 				'process.browser': false,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				...env,
 			}),
 			svelte({
 				generate: 'ssr',
@@ -104,7 +113,7 @@ export default {
 			resolve(),
 			replace({
 				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
+				...env
 			}),
 			commonjs(),
 			!dev && terser()

@@ -1,64 +1,76 @@
 <script>
   export let segment;
+
+  import { onDestroy } from 'svelte';
+  import { GoogleAuth } from '../stores';
+
+  import { googleAuth, getGoogleUser } from '../common/google-auth';
+
+  let currentGoogleUser;
+  const googleAuthUnsubscribe = GoogleAuth.subscribe((auth) => {
+    if (auth?.isSignedIn?.get?.()) {
+      currentGoogleUser = getGoogleUser(auth?.currentUser?.get?.());
+    } else {
+      currentGoogleUser = undefined;
+    }
+  });
+
+  onDestroy(googleAuthUnsubscribe);
+
+  async function doLoginGoogle() {
+    if (!currentGoogleUser) {
+      // open google window to let the user select a user to login as, or to grant access
+      try {
+        const user = await $GoogleAuth.signIn({ prompt: 'select_account' });
+        currentGoogleUser = getGoogleUser(user);
+      } catch (err) {
+        console.error(err);
+        currentGoogleUser = undefined;
+      }
+    }
+  }
+
+  async function doLogoutGoogle() {
+    if (window.confirm('Logout?')) {
+      await $GoogleAuth.signOut();
+      // refresh GoogleAuth instance
+      $GoogleAuth = await googleAuth();
+    }
+  }
 </script>
 
 <style>
-  nav {
-    border-bottom: 1px solid rgba(255, 62, 0, 0.1);
-    font-weight: 300;
-    padding: 0 1em;
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-  }
-
-  /* clearfix */
-  ul::after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-
-  li {
-    display: block;
-    float: left;
-  }
-
-  [aria-current] {
-    position: relative;
-    display: inline-block;
-  }
-
-  [aria-current]::after {
-    position: absolute;
-    content: '';
-    width: calc(100% - 1em);
-    height: 2px;
-    background-color: rgb(255, 62, 0);
-    display: block;
-    bottom: -1px;
-  }
-
-  a {
-    text-decoration: none;
-    padding: 1em 0.5em;
-    display: block;
-  }
 </style>
 
-<nav>
-  <ul>
-    <li>
-      <a aria-current="{segment === undefined ? 'page' : undefined}" href=".">my
-        schedule</a>
-    </li>
-    <li>
+<nav class="level p-3 m-0">
+  <ul class="level-left">
+    <li class="level-item">
       <a
+              class="button is-rounded"
+        class:is-info="{segment === undefined ? 'page' : undefined}"
+        aria-current="{segment === undefined ? 'page' : undefined}"
+        href="."
+      >my schedule</a>
+    </li>
+    <li class="level-item">
+      <a
+              class="button is-rounded"
+        class:is-info="{segment === 'setup' ? 'page' : undefined}"
         aria-current="{segment === 'setup' ? 'page' : undefined}"
         href="setup"
       >setup</a>
+    </li>
+  </ul>
+  <ul class="level-right">
+    <li class="level-item">
+      {#if !currentGoogleUser}
+        <a class="button" on:click="{doLoginGoogle}">login with Google</a>
+      {:else}
+        <a
+          class="button"
+          on:click="{doLogoutGoogle}"
+        >{currentGoogleUser.email}</a>
+      {/if}
     </li>
   </ul>
 </nav>
