@@ -2,30 +2,29 @@
   export let segment;
 
   import { onDestroy } from 'svelte';
-  import { GoogleAuth } from '../stores';
+  import { GoogleAuth, currentGoogleUser } from '../stores';
 
   import { googleAuth, getGoogleUser } from '../common/google-auth';
 
-  let currentGoogleUser;
   const googleAuthUnsubscribe = GoogleAuth.subscribe((auth) => {
     if (auth?.isSignedIn?.get?.()) {
-      currentGoogleUser = getGoogleUser(auth?.currentUser?.get?.());
+      $currentGoogleUser = getGoogleUser(auth?.currentUser?.get?.());
     } else {
-      currentGoogleUser = undefined;
+      $currentGoogleUser = undefined;
     }
   });
 
   onDestroy(googleAuthUnsubscribe);
 
   async function doLoginGoogle() {
-    if (!currentGoogleUser) {
+    if (!$currentGoogleUser) {
       // open google window to let the user select a user to login as, or to grant access
       try {
         const user = await $GoogleAuth.signIn({ prompt: 'select_account' });
-        currentGoogleUser = getGoogleUser(user);
+        $currentGoogleUser = getGoogleUser(user);
       } catch (err) {
         console.error(err);
-        currentGoogleUser = undefined;
+        $currentGoogleUser = undefined;
       }
     }
   }
@@ -35,6 +34,7 @@
       await $GoogleAuth.signOut();
       // refresh GoogleAuth instance
       $GoogleAuth = await googleAuth();
+      $currentGoogleUser = undefined;
     }
   }
 </script>
@@ -46,7 +46,7 @@
   <ul class="level-left">
     <li class="level-item">
       <a
-              class="button is-rounded"
+        class="button is-rounded"
         class:is-info="{segment === undefined ? 'page' : undefined}"
         aria-current="{segment === undefined ? 'page' : undefined}"
         href="."
@@ -54,7 +54,7 @@
     </li>
     <li class="level-item">
       <a
-              class="button is-rounded"
+        class="button is-rounded"
         class:is-info="{segment === 'setup' ? 'page' : undefined}"
         aria-current="{segment === 'setup' ? 'page' : undefined}"
         href="setup"
@@ -63,13 +63,13 @@
   </ul>
   <ul class="level-right">
     <li class="level-item">
-      {#if !currentGoogleUser}
+      {#if !$currentGoogleUser}
         <a class="button" on:click="{doLoginGoogle}">login with Google</a>
       {:else}
         <a
           class="button"
           on:click="{doLogoutGoogle}"
-        >{currentGoogleUser.email}</a>
+        >{$currentGoogleUser.email}</a>
       {/if}
     </li>
   </ul>

@@ -1,18 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-
-  const meetings = [
-    {
-      title: 'Mr Selix',
-      description:
-        'Morning Tasks.  Could be anything.  Add links here too.  http://www.example.com',
-      startTimeHour: 5, // 24 hour format
-      startTimeMinute: 25,
-      lengthInMinutes: 1, // minutes
-      days: [1, 3, 5], // 0-6 Sunday-Saturday
-      meetingUrl: 'http://foo.com',
-    },
-  ];
+  import { currentGoogleUser } from '../stores';
 
   function getStartAndEndTimeInMs(meetingArg) {
     const currentStartTimeInMilleseconds = getMeetingStartTimeToday(
@@ -23,7 +11,6 @@
       currentStartTimeInMilleseconds + meetingArg.lengthInMinutes * 60 * 1000;
     return [currentStartTimeInMilleseconds, currentEndTimeInMilleseconds];
   }
-
   function getCurrentMeeting(nowArg, meetingsArg) {
     const nowInMilleseconds = Date.now();
     for (let i = 0; i < meetingsArg.length; i++) {
@@ -40,7 +27,6 @@
       }
     }
   }
-
   function getDateZeroedToMinutes() {
     let date = new Date();
     date.setSeconds(0);
@@ -70,11 +56,28 @@
         60000
     );
   }
-  let meeting = getCurrentMeeting(now, meetings);
+
+  let meetingsForToday = [];
+  async function getTodaysMeetings(token) {
+    const response = await fetch(
+      `/schedule/${token}?dayOfWeek=${now.getDay()}`
+    );
+    const meetings = await response.json();
+    console.log("Today's Meetings", meetings);
+    meetingsForToday = meetings;
+  }
+
+  $: if ($currentGoogleUser) {
+    getTodaysMeetings($currentGoogleUser.idToken);
+  } else {
+    meetingsForToday = [];
+  }
+
+  let meeting = getCurrentMeeting(now, meetingsForToday);
   onMount(() => {
     intervalId = setInterval(() => {
       now = getDateZeroedToMinutes();
-      const maybeMeeting = getCurrentMeeting(now, meetings);
+      const maybeMeeting = getCurrentMeeting(now, meetingsForToday);
       meeting = maybeMeeting ? { ...maybeMeeting } : maybeMeeting;
     }, 1000);
     return () => {
@@ -106,23 +109,29 @@
     <nav class="level is-mobile is-family-code has-text-grey">
       <div class="level-left">
         <div class="level-item">
-          <p class="content is-size-3">{getDayOfTheWeek(now)}</p>
+          <p class="content is-size-3">Today is {getDayOfTheWeek(now)}</p>
         </div>
       </div>
       <div class="level-right">
         <div class="level-item">
-          <p class="content is-size-3">{getShortTime(now)}</p>
+          <p class="content is-size-3">it's {getShortTime(now)}</p>
         </div>
       </div>
     </nav>
     <div class="container">
       {#if !meeting}
-        <h1 class="title is-1 has-text-centered">Free!</h1>
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <h1 class="title" style="font-size: 5rem;">Free 🕊️</h1>
+          </div>
+        </div>
       {:else}
         <div class="card">
           <div class="card-header has-background-info-light p-3">
             <div class="card-header-title is-centered">
-              <h1 class="title is-1 m-0">{meeting.title}</h1>
+              <h1 class="title m-0" style="font-size: 5rem;">
+                {meeting.title}
+              </h1>
             </div>
           </div>
           <div
@@ -156,8 +165,7 @@
               {@html meeting.description}
             </p>
           </div>
-
-          <div class="card-footer">
+          <div class="card-footer p-5">
             <div class="card-footer-item">
               <a
                 class="button is-large is-link"
