@@ -1,6 +1,7 @@
 const { OAuth2Client } = require('google-auth-library');
 
 import { getUser, createUser } from '../_database.js'; // the underscore tells Sapper this isn't a route
+import exampleSchedule from '../../example-schedule';
 
 async function getOrCreateGoogleUser(token) {
   try {
@@ -44,15 +45,18 @@ export async function get(req, res, next) {
 
   let schedule = {};
   console.log('loggedInUser', loggedInUser);
-  if (loggedInUser) {
+  // use fixture date?
+  if (false) {
+    schedule = exampleSchedule;
+  } else if (loggedInUser) {
     const { meta = {} } = loggedInUser;
     ({ schedule = {} } = meta);
   }
 
-  // format meetings as an array for a given day of week 0-6
+  // format meetings as an array for a given day of the week 0-6
   if (Number.isInteger(dayOfWeek)) {
     schedule = Object.values(schedule)
-      .filter((meeting) => meeting.days.includes(dayOfWeek))
+      .filter((meeting) => meeting.days[dayOfWeek])
       .sort(
         (
           {
@@ -71,7 +75,7 @@ export async function get(req, res, next) {
       );
   }
 
-  // send raw map of meetings keyed off of meeting id
+  // send raw map of meetings keyed off of meeting id unsorted
   res.end(JSON.stringify(schedule));
 }
 

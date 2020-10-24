@@ -11,6 +11,11 @@ function saneEnvironmentOrExit(...requiredVars) {
   }
 }
 
+function isBrowser() {
+  return typeof window !== 'undefined';
+}
+
 module.exports = {
   saneEnvironmentOrExit,
+  isBrowser,
 };

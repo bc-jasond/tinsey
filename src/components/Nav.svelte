@@ -52,14 +52,16 @@
         href="."
       >my schedule</a>
     </li>
-    <li class="level-item">
-      <a
-        class="button is-rounded"
-        class:is-info="{segment === 'setup' ? 'page' : undefined}"
-        aria-current="{segment === 'setup' ? 'page' : undefined}"
-        href="setup"
-      >setup</a>
-    </li>
+    {#if $currentGoogleUser}
+      <li class="level-item">
+        <a
+          class="button is-rounded"
+          class:is-info="{segment === 'setup' ? 'page' : undefined}"
+          aria-current="{segment === 'setup' ? 'page' : undefined}"
+          href="setup"
+        >setup</a>
+      </li>
+    {/if}
   </ul>
   <ul class="level-right">
     <li class="level-item">
