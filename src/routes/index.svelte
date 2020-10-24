@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
-  import { currentGoogleUser } from '../stores';
+  import { fly, fade } from 'svelte/transition';
+  import { currentGoogleUser, shouldShowNav } from '../stores';
 
   function getStartAndEndTimeInMs(meetingArg) {
     const currentStartTimeInMilleseconds = getMeetingStartTimeToday(
@@ -86,6 +87,9 @@
 </script>
 
 <style>
+  .open-nav {
+    cursor: pointer;
+  }
 </style>
 
 <svelte:head>
@@ -96,7 +100,7 @@
   <div class="hero">
     <div class="hero-body p-2 has-background-info-light has-text-centered">
       <div class="container">
-        <h1 class="title is-family-sans-serif m-0" style="font-size: 4rem;">
+        <h1 class="title is-family-sans-serif m-0 open-nav" style="font-size: 4rem;" on:dblclick={() => $shouldShowNav = !$shouldShowNav}>
           Where am I supposed to be rn? 🤔
         </h1>
       </div>
@@ -119,19 +123,22 @@
     </nav>
     <div class="container">
       {#if !meeting}
-        <div class="card">
+        <div in:fly={{y:200, duration:250, delay: 150}} out:fade={{duration:200}} class="card">
           <div class="card-content has-text-centered">
             <h1 class="title" style="font-size: 5rem;">Free 🕊️</h1>
           </div>
         </div>
       {:else}
-        <div class="card">
+        <div in:fly={{y:200, duration:250, delay:150}} out:fade={{duration:200}} class="card">
           <div class="card-header has-background-info-light p-3">
             <div class="card-header-title is-centered">
               <h1 class="title m-0" style="font-size: 5rem;">
                 {meeting.title}
               </h1>
             </div>
+          </div>
+          <div class="card-content has-text-centered">
+            <h2 class="subtitle m-0 is-1">{meeting.subTitle}</h2>
           </div>
           <div
             class="card-content has-text-centered has-text-light has-background-grey p-1"

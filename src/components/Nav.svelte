@@ -2,7 +2,8 @@
   export let segment;
 
   import { onDestroy } from 'svelte';
-  import { GoogleAuth, currentGoogleUser } from '../stores';
+  import { scale, fly } from 'svelte/transition';
+  import { GoogleAuth, currentGoogleUser, shouldShowNav } from '../stores';
 
   import { googleAuth, getGoogleUser } from '../common/google-auth';
 
@@ -40,9 +41,11 @@
 </script>
 
 <style>
+
 </style>
 
-<nav class="level p-3 m-0">
+{#if $shouldShowNav}
+<nav class="level p-3 m-0" out:scale={{}} in:fly={{y:100, duration:125}}>
   <ul class="level-left">
     <li class="level-item">
       <a
@@ -76,3 +79,4 @@
     </li>
   </ul>
 </nav>
+  {/if}

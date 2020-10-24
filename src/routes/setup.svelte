@@ -1,6 +1,7 @@
 <script>
   import { onDestroy } from 'svelte';
-  import { currentGoogleUser } from '../stores';
+  import { fade} from 'svelte/transition';
+  import { currentGoogleUser, shouldShowNav } from '../stores';
 
   const meetingTemplate = {
     id: '', // not used yet
@@ -13,6 +14,8 @@
     days: [], // 0-6 Sunday-Saturday
     meetingUrl: '',
   };
+
+  $shouldShowNav = true;
 
   let currentUser;
   let meeting = meetingTemplate;
@@ -66,11 +69,9 @@
 </script>
 
 <style>
-  pre {
-    max-height: 400px;
-    overflow: auto;
-    white-space: pre-wrap;
-  }
+    td {
+        vertical-align: middle;
+    }
   .time-separator-container {
     width: 10px;
     display: flex;
@@ -87,25 +88,34 @@
   <title>About</title>
 </svelte:head>
 
-<div class="section">
+<div class="container is-max-widescreen">
+  <section class="section">
+  <h1 class="title is-1">Setup your schedule</h1>
+<table class="table is-fullwidth is-striped is-hoverable">
+  <thead>
+  <tr>
+  <th></th>
+  <th>Title</th>
+    <th>Subtitle</th>
+  <th>Time</th>
+    <th>Duration</th>
+  <th>Days of Week</th>
+  </tr>
+  </thead>
+  <tbody>
   {#each Object.values(schedule) as meetingData}
-    <div class="columns">
-      <div class="column">
+    <tr transition:fade={{duration:125}}>
+      <td>
         <a
-          class="button"
+          class="button is-info is-outlined"
           on:click="{() => editMeeting(meetingData.id)}"
         >Edit</a>
-      </div>
-      <div class="column">
-        <span
-          class="content"
-        >{meetingData.startTimeHour}:{meetingData.startTimeMinute}
-          for
-          {meetingData.lengthInMinutes}
-          mins</span>
-      </div>
-      <div class="column"><span class="content">{meetingData.title}</span></div>
-      <div class="column">
+      </td>
+      <td>{meetingData.title}</td>
+      <td>{meetingData.subTitle}</td>
+      <td>{meetingData.startTimeHour}:{meetingData.startTimeMinute}</td>
+      <td>{meetingData.lengthInMinutes} mins</td>
+      <td>
         <div class="field has-addons">
           {#each daysOfWeek as day, idx}
             <div class="control">
@@ -116,13 +126,16 @@
             </div>
           {/each}
         </div>
-      </div>
-    </div>
+      </td>
+    </tr>
   {/each}
+  </tbody>
+</table>
+  </section>
 </div>
 <div class="container is-max-widescreen">
   <section class="section">
-    <h1>Setup your schedule</h1>
+    <h2 class="subtitle is-2">Edit Meeting Details</h2>
 
     <!--    <label class="label ">Meeting id</label>-->
     <!--    <div class="field has-addons">-->
