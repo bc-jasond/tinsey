@@ -14,11 +14,12 @@
     meetingUrl: '',
   };
 
+  let currentUser;
   let meeting = meetingTemplate;
 
   const daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
 
-  let schedule = '';
+  let schedule = {};
   async function getSchedule(token) {
     const response = await fetch(`/schedule/${token}`);
     schedule = await response.json();
@@ -26,6 +27,7 @@
 
   const currentGoogleUserDeregister = currentGoogleUser.subscribe((u) => {
     if (u) {
+      currentUser = u;
       getSchedule(u.idToken);
     }
   });
@@ -37,8 +39,30 @@
   function updateDayOfWeek(idx) {
     meeting.days[idx] = !meeting.days[idx];
   }
-
-  async function saveMeeting() {}
+  function newMeeting() {
+    meeting = JSON.parse(JSON.stringify(meetingTemplate));
+  }
+  function editMeeting(id) {
+    meeting = JSON.parse(JSON.stringify(schedule[id]));
+  }
+  let saveIsLoading;
+  async function saveMeeting() {
+    saveIsLoading = true;
+    if (!meeting.id) {
+      meeting.id = Date.now();
+    }
+    schedule[meeting.id] = meeting;
+    const response = await fetch(`/schedule/${currentUser.idToken}`, {
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(schedule), // body data type must match "Content-Type" header
+    });
+    saveIsLoading = false;
+    schedule = await response.json();
+  }
 </script>
 
 <style>
@@ -63,15 +87,38 @@
   <title>About</title>
 </svelte:head>
 
-<div class="columns">
-  <div class="column">
-    <h1>schedule</h1>
-    <pre>{JSON.stringify(schedule, undefined, 2)}</pre>
-  </div>
-  <div class="column">
-    <h1>meeting</h1>
-    <pre>{JSON.stringify(meeting, undefined, 2)}</pre>
-  </div>
+<div class="section">
+  {#each Object.values(schedule) as meetingData}
+    <div class="columns">
+      <div class="column">
+        <a
+          class="button"
+          on:click="{() => editMeeting(meetingData.id)}"
+        >Edit</a>
+      </div>
+      <div class="column">
+        <span
+          class="content"
+        >{meetingData.startTimeHour}:{meetingData.startTimeMinute}
+          for
+          {meetingData.lengthInMinutes}
+          mins</span>
+      </div>
+      <div class="column"><span class="content">{meetingData.title}</span></div>
+      <div class="column">
+        <div class="field has-addons">
+          {#each daysOfWeek as day, idx}
+            <div class="control">
+              <a
+                class="button"
+                class:is-info="{meetingData.days[idx]}"
+              >{day}</a>
+            </div>
+          {/each}
+        </div>
+      </div>
+    </div>
+  {/each}
 </div>
 <div class="container is-max-widescreen">
   <section class="section">
@@ -195,10 +242,17 @@
 
     <div class="field is-grouped is-grouped-centered mt-5">
       <div class="control">
-        <button class="button is-rounded is-large is-info">Save</button>
+        <button
+          class="button is-rounded is-large is-info"
+          class:is-loading="{saveIsLoading}"
+          on:click="{saveMeeting}"
+        >Save</button>
       </div>
       <div class="control">
-        <button class="button is-rounded is-large">New</button>
+        <button
+          class="button is-rounded is-large"
+          on:click="{newMeeting}"
+        >New</button>
       </div>
     </div>
   </section>

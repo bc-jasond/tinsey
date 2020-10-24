@@ -1,9 +1,9 @@
 const { OAuth2Client } = require('google-auth-library');
 
-import { getUser, createUser } from '../_database.js'; // the underscore tells Sapper this isn't a route
+import { getUser, createUser, saveUser } from '../_database.js'; // the underscore tells Sapper this isn't a route
 import exampleSchedule from '../../example-schedule';
 
-async function getOrCreateGoogleUser(token) {
+async function verifyToken(token) {
   try {
     const client = new OAuth2Client(process.env.GOOGLE_API_FILBERT_CLIENT_ID);
     const ticket = await client.verifyIdToken({
@@ -20,7 +20,18 @@ async function getOrCreateGoogleUser(token) {
     //     iss,
     //     exp,
     // } = googleUser;
+    return googleUser;
+  } catch (err) {
+    console.error('verifyToken()', token, err);
+  }
+}
 
+async function getOrCreateGoogleUser(token) {
+  try {
+    const googleUser = await verifyToken(token);
+    if (!googleUser) {
+      return;
+    }
     const user = await getUser(googleUser);
     // TODO: update db if any values are different
     if (user) {
@@ -34,9 +45,21 @@ async function getOrCreateGoogleUser(token) {
   }
 }
 
+async function saveSchedule(token, schedule) {
+  try {
+    const googleUser = await verifyToken(token);
+    if (!googleUser) {
+      return;
+    }
+    const user = await getUser(googleUser);
+    user.meta.schedule = schedule;
+    return saveUser(user);
+  } catch (err) {
+    console.error('saveSchedule()', token, schedule, err);
+  }
+}
+
 export async function get(req, res, next) {
-  // the `slug` parameter is available because this file
-  // is called [slug].json.js
   const { token } = req.params;
   let { dayOfWeek } = req.query;
   dayOfWeek = parseInt(dayOfWeek, 10);
@@ -44,7 +67,7 @@ export async function get(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
 
   let schedule = {};
-  console.log('loggedInUser', loggedInUser);
+  //console.log('loggedInUser', loggedInUser);
   // use fixture date?
   if (false) {
     schedule = exampleSchedule;
@@ -80,5 +103,8 @@ export async function get(req, res, next) {
 }
 
 export async function put(req, res, next) {
-  next();
+  const { token } = req.params;
+  const updatedUser = await saveSchedule(token, req.body);
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(updatedUser.meta.schedule));
 }

@@ -56,3 +56,12 @@ export async function createUser({ email }) {
   const [user] = await knex('user').where({ email });
   return user;
 }
+
+export async function saveUser({ email, meta }) {
+  const knex = await getKnex();
+  await knex('user')
+    .update({ meta: JSON.stringify(meta) })
+    .where({ email });
+  const [user] = await knex('user').where({ email });
+  return user;
+}

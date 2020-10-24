@@ -11,8 +11,7 @@
       currentStartTimeInMilleseconds + meetingArg.lengthInMinutes * 60 * 1000;
     return [currentStartTimeInMilleseconds, currentEndTimeInMilleseconds];
   }
-  function getCurrentMeeting(nowArg, meetingsArg) {
-    const nowInMilleseconds = Date.now();
+  function getCurrentMeeting(nowInMilleseconds, meetingsArg) {
     for (let i = 0; i < meetingsArg.length; i++) {
       const current = meetingsArg[i];
       const [
@@ -21,7 +20,7 @@
       ] = getStartAndEndTimeInMs(current);
       if (
         nowInMilleseconds >= currentStartTimeInMilleseconds &&
-        nowInMilleseconds <= currentEndTimeInMilleseconds
+        nowInMilleseconds < currentEndTimeInMilleseconds
       ) {
         return current;
       }
@@ -63,7 +62,7 @@
       `/schedule/${token}?dayOfWeek=${now.getDay()}`
     );
     const meetings = await response.json();
-    console.log("Today's Meetings", meetings);
+    //console.log("Today's Meetings", meetings);
     meetingsForToday = meetings;
   }
 
@@ -95,7 +94,7 @@
 
 <section class="section p-0 is-fullwidth">
   <div class="hero">
-    <div class="hero-body has-background-info-light has-text-centered">
+    <div class="hero-body p-2 has-background-info-light has-text-centered">
       <div class="container">
         <h1 class="title is-family-sans-serif m-0" style="font-size: 4rem;">
           Where am I supposed to be rn? 🤔
@@ -148,14 +147,16 @@
                 <p class="content is-size-3">
                   is
                   {meeting.lengthInMinutes}
-                  minutes long
+                  minute{meeting.lengthInMinutes !== 1 ? 's' : ''}
+                  long
                 </p>
               </div>
               <div class="column">
                 <p class="content is-size-3 is-italic">
                   there's
                   {minutesLeft}
-                  minutes left
+                  minute{minutesLeft !== 1 ? 's' : ''}
+                  left
                 </p>
               </div>
             </div>
