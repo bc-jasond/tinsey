@@ -41,42 +41,45 @@
 </script>
 
 <style>
-
 </style>
 
 {#if $shouldShowNav}
-<nav class="level p-3 m-0" out:scale={{}} in:fly={{y:100, duration:125}}>
-  <ul class="level-left">
-    <li class="level-item">
-      <a
-        class="button is-rounded"
-        class:is-info="{segment === undefined ? 'page' : undefined}"
-        aria-current="{segment === undefined ? 'page' : undefined}"
-        href="."
-      >my schedule</a>
-    </li>
-    {#if $currentGoogleUser}
+  <nav
+    class="level p-3 m-0"
+    out:scale|local
+    in:fly|local="{{ y: 100, duration: 250 }}"
+  >
+    <ul class="level-left">
       <li class="level-item">
         <a
           class="button is-rounded"
-          class:is-info="{segment === 'setup' ? 'page' : undefined}"
-          aria-current="{segment === 'setup' ? 'page' : undefined}"
-          href="setup"
-        >setup</a>
+          class:is-info="{segment === undefined ? 'page' : undefined}"
+          aria-current="{segment === undefined ? 'page' : undefined}"
+          href="."
+        >my schedule</a>
       </li>
-    {/if}
-  </ul>
-  <ul class="level-right">
-    <li class="level-item">
-      {#if !$currentGoogleUser}
-        <a class="button" on:click="{doLoginGoogle}">login with Google</a>
-      {:else}
-        <a
-          class="button"
-          on:click="{doLogoutGoogle}"
-        >{$currentGoogleUser.email}</a>
+      {#if $currentGoogleUser}
+        <li class="level-item">
+          <a
+            class="button is-rounded"
+            class:is-info="{segment === 'setup' ? 'page' : undefined}"
+            aria-current="{segment === 'setup' ? 'page' : undefined}"
+            href="setup"
+          >setup</a>
+        </li>
       {/if}
-    </li>
-  </ul>
-</nav>
-  {/if}
+    </ul>
+    <ul class="level-right">
+      <li class="level-item">
+        {#if !$currentGoogleUser}
+          <a class="button" on:click="{doLoginGoogle}">login with Google</a>
+        {:else}
+          <a
+            class="button"
+            on:click="{doLogoutGoogle}"
+          >{$currentGoogleUser.email}</a>
+        {/if}
+      </li>
+    </ul>
+  </nav>
+{/if}

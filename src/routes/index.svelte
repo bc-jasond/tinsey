@@ -45,6 +45,9 @@
   function getDayOfTheWeek(date) {
     return date.toLocaleString('en-US', { weekday: 'long' });
   }
+  function getDate(date) {
+    return date.toLocaleString('en-US', { dateStyle: 'long' });
+  }
 
   let intervalId;
   let now = getDateZeroedToMinutes();
@@ -90,6 +93,18 @@
   .open-nav {
     cursor: pointer;
   }
+  @keyframes blink {
+    from,
+    to {
+      color: #7a7a7a;
+    }
+    50% {
+      color: transparent;
+    }
+  }
+  .blink {
+    animation: 1.5s blink step-end infinite;
+  }
 </style>
 
 <svelte:head>
@@ -100,7 +115,12 @@
   <div class="hero">
     <div class="hero-body p-2 has-background-info-light has-text-centered">
       <div class="container">
-        <h1 class="title is-family-sans-serif m-0 open-nav" style="font-size: 4rem;" on:dblclick={() => $shouldShowNav = !$shouldShowNav}>
+        <h1
+          class="title is-family-sans-serif m-0 open-nav"
+          title="Double-click me to show/hide the menu bar above..."
+          style="font-size: 3rem;"
+          on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
+        >
           Where am I supposed to be rn? 🤔
         </h1>
       </div>
@@ -109,27 +129,41 @@
 </section>
 <div class="container is-max-widescreen">
   <section class="section">
-    <nav class="level is-mobile is-family-code has-text-grey">
+    <nav class="level is-family-code has-text-grey">
       <div class="level-left">
         <div class="level-item">
-          <p class="content is-size-3">Today is {getDayOfTheWeek(now)}</p>
+          <span class="content is-size-3">Today is
+            <em>{getDayOfTheWeek(now)}</em><br />{getDate(now)}</span>
         </div>
       </div>
       <div class="level-right">
         <div class="level-item">
-          <p class="content is-size-3">it's {getShortTime(now)}</p>
+          <span class="content is-size-3 mb-0">it's
+            {getShortTime(now).split(':')[0]}</span>
+          <span class="content is-size-3 mb-0 blink">:</span>
+          <span
+            class="content is-size-3"
+          >{getShortTime(now).split(':')[1]}</span>
         </div>
       </div>
     </nav>
     <div class="container">
       {#if !meeting}
-        <div in:fly={{y:200, duration:250, delay: 150}} out:fade={{duration:200}} class="card">
+        <div
+          in:fly|local="{{ y: 200, duration: 250, delay: 150 }}"
+          out:fade|local="{{ duration: 200 }}"
+          class="card"
+        >
           <div class="card-content has-text-centered">
             <h1 class="title" style="font-size: 5rem;">Free 🕊️</h1>
           </div>
         </div>
       {:else}
-        <div in:fly={{y:200, duration:250, delay:150}} out:fade={{duration:200}} class="card">
+        <div
+          in:fly|local="{{ y: 200, duration: 250, delay: 150 }}"
+          out:fade|local="{{ duration: 200 }}"
+          class="card"
+        >
           <div class="card-header has-background-info-light p-3">
             <div class="card-header-title is-centered">
               <h1 class="title m-0" style="font-size: 5rem;">
