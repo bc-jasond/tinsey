@@ -15,7 +15,16 @@ function isBrowser() {
   return typeof window !== 'undefined';
 }
 
+function isUrl(s) {
+  try {
+    const url = new URL(s);
+    return true;
+  } catch (err) {}
+}
+
 module.exports = {
   saneEnvironmentOrExit,
   isBrowser,
+  isUrl,
 };
+

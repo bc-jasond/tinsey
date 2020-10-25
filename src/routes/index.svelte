@@ -1,7 +1,10 @@
 <script>
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
+
+  import { isUrl } from '../common/utils';
   import { currentGoogleUser, shouldShowNav } from '../stores';
+
 
   function getStartAndEndTimeInMs(meetingArg) {
     const currentStartTimeInMilleseconds = getMeetingStartTimeToday(
@@ -209,13 +212,19 @@
           </div>
           <div class="card-footer p-5">
             <div class="card-footer-item">
-              <a
+              {#if isUrl(meeting.meetingUrl)}<a
                 class="button is-large is-link"
                 href="{meeting.meetingUrl}"
                 target="_blank"
                 rel="noreferrer"
                 style="height: unset;"
               ><h1 class="is-1 m-1">Join Meeting</h1></a>
+                {:else}
+                <span
+                  class="button is-large is-static"
+                  style="height: unset;"
+                ><h1 class="is-1 m-1">No (or invalid) Meeting Link</h1></span>
+                {/if}
             </div>
           </div>
         </div>

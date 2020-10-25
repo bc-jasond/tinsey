@@ -1,7 +1,9 @@
 <script>
   import { onDestroy, tick } from 'svelte';
   import { fade } from 'svelte/transition';
+
   import { currentGoogleUser, shouldShowNav } from '../stores';
+  import {isUrl} from '../common/utils';
 
   const tempMeetingId = 'new';
   const meetingTemplate = {
@@ -227,9 +229,9 @@
               />
             </p>
             <p class="control">
-              <button class="button" on:click="{() => updateSearch('')}"><a
+              <button class="button" on:click="{() => updateSearch('')}"><span
                   class="delete"
-                ></a></button>
+                ></span></button>
             </p>
           </div>
         </div>
@@ -299,7 +301,7 @@
                   >Edit</button>
                 {/if}
               </td>
-              <td>{meetingData.title}</td>
+              <td>{meetingData.title}{#if isUrl(meetingData.meetingUrl)}<span class="px-2" title="Has a video conferencing link">🎥</span>{/if}</td>
               <td>{meetingData.subTitle}</td>
               <td>{getStartTime(meetingData)}</td>
               <td>{meetingData.lengthInMinutes} mins</td>
@@ -326,7 +328,7 @@
                 class="edit-meeting-form-row has-background-white-ter"
               >
                 <td colspan="7">
-                  <div class="section pt-0">
+                  <form class="section pt-0" on:submit={saveMeeting} on:reset={cancelEdit}>
                     <!--                <h2 class="subtitle is-2">Edit Meeting Details</h2>-->
 
                     <!--    <label class="label ">Meeting id</label>-->
@@ -338,9 +340,10 @@
                     <!--    </div>-->
 
                     <div class="field">
-                      <label class="label">Title</label>
+                      <label for="meeting-title" class="label">Title</label>
                       <div class="control">
                         <input
+                          id="meeting-title"
                           class="input"
                           type="text"
                           placeholder="Meeting Title"
@@ -351,9 +354,10 @@
                     </div>
 
                     <div class="field">
-                      <label class="label">Subtitle</label>
+                      <label for="meeting-subtitle" class="label">Subtitle</label>
                       <div class="control">
                         <input
+                          id="meeting-subtitle"
                           class="input"
                           type="text"
                           placeholder="Meeting Subtitle"
@@ -363,9 +367,10 @@
                     </div>
 
                     <div class="field">
-                      <label class="label">Description</label>
+                      <label for="meeting-description" class="label">Description</label>
                       <div class="control">
                         <textarea
+                          id="meeting-description"
                           class="textarea"
                           rows="6"
                           placeholder="Meeting Description"
@@ -376,8 +381,8 @@
 
                     <div class="columns">
                       <div class="column">
-                        <label class="label">Days of the Week</label>
-                        <div class="field has-addons">
+                        <label for="days-of-the-week" class="label">Days of the Week</label>
+                        <div id="days-of-the-week" class="field has-addons">
                           {#each daysOfWeek as day, idx}
                             <div class="control">
                               <button
@@ -391,9 +396,10 @@
                       </div>
 
                       <div class="column time-input-container">
-                        <label class="label">Start Time (24h)</label>
+                        <label for="start-time-hour" class="label">Start Time (24h)</label>
                         <div class="control">
                           <input
+                            id="start-time-hour"
                             class="input"
                             type="number"
                             min="0"
@@ -413,9 +419,10 @@
                         </div>
                       </div>
                       <div class="column">
-                        <label class="label">Duration in Minutes (1-1440)</label>
+                        <label for="meeting-duration" class="label">Duration in Minutes (1-1440)</label>
                         <div class="control">
                           <input
+                            id="meeting-duration"
                             class="input"
                             type="number"
                             min="1"
@@ -428,9 +435,10 @@
                     </div>
 
                     <div class="field">
-                      <label class="label">Meeting Link</label>
+                      <label for="meeting-url" class="label">Video Conferencing Link (must begin with http:// or https://)</label>
                       <div class="control">
                         <input
+                          id="meeting-url"
                           class="input"
                           type="text"
                           placeholder="https://us02web.zoom.us/j/935416062?pwd=RjlSUXZoQRYVVPd2hhaE1uMUR6UT09"
@@ -442,6 +450,7 @@
                     <div class="field is-grouped is-grouped-centered mt-5">
                       <div class="control">
                         <button
+                          type="submit"
                           class="button is-rounded is-large is-info"
                           class:is-loading="{saveIsLoading}"
                           on:click="{saveMeeting}"
@@ -449,12 +458,13 @@
                       </div>
                       <div class="control">
                         <button
+                          type="reset"
                           class="button is-rounded is-large"
                           on:click="{cancelEdit}"
                         >Cancel</button>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 </td>
               </tr>
             {/if}

@@ -1,4 +1,5 @@
 const { OAuth2Client } = require('google-auth-library');
+const linkifyUrls = require('linkify-urls');
 
 import { getUser, createUser, saveUser } from '../_database.js'; // the underscore tells Sapper this isn't a route
 import exampleSchedule from '../../example-schedule';
@@ -80,6 +81,11 @@ export async function get(req, res, next) {
   if (Number.isInteger(dayOfWeek)) {
     schedule = Object.values(schedule)
       .filter((meeting) => meeting.days[dayOfWeek])
+      .map((meeting) => {
+        meeting.description = meeting.description.split('\n').join('<br />')
+        meeting.description = linkifyUrls(meeting.description || '', {attributes:{class:"button is-text is-large", style:"padding: 0; vertical-align: baseline; height: 27px;"}})
+        return meeting;
+      })
       .sort(
         (
           {
