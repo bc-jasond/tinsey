@@ -82,8 +82,13 @@ export async function get(req, res, next) {
     schedule = Object.values(schedule)
       .filter((meeting) => meeting.days[dayOfWeek])
       .map((meeting) => {
-        meeting.description = meeting.description.split('\n').join('<br />')
-        meeting.description = linkifyUrls(meeting.description || '', {attributes:{class:"button is-text is-large", style:"padding: 0; vertical-align: baseline; height: 27px;"}})
+        meeting.description = meeting.description.split('\n').join('<br />');
+        meeting.description = linkifyUrls(meeting.description || '', {
+          attributes: {
+            class: 'button is-text is-large',
+            style: 'padding: 0; vertical-align: baseline; height: 27px;',
+          },
+        });
         return meeting;
       })
       .sort(

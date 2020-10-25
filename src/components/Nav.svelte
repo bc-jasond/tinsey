@@ -51,6 +51,9 @@
   >
     <ul class="level-left">
       <li class="level-item">
+        <h1 class="title is-family-monospace has-text-grey">tinsey</h1>
+      </li>
+      <li class="level-item">
         <a
           class="button is-rounded"
           class:is-info="{segment === undefined ? 'page' : undefined}"
@@ -72,12 +75,13 @@
     <ul class="level-right">
       <li class="level-item">
         {#if !$currentGoogleUser}
-          <a class="button" on:click="{doLoginGoogle}">login with Google</a>
+          <button class="button" on:click="{doLoginGoogle}">login with Google</button>
         {:else}
-          <a
+          <button
             class="button"
             on:click="{doLogoutGoogle}"
-          >{$currentGoogleUser.email}</a>
+          >{$currentGoogleUser.givenName}
+            ({$currentGoogleUser.email})</button>
         {/if}
       </li>
     </ul>

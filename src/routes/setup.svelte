@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
 
   import { currentGoogleUser, shouldShowNav } from '../stores';
-  import {isUrl} from '../common/utils';
+  import { isUrl } from '../common/utils';
 
   const tempMeetingId = 'new';
   const meetingTemplate = {
@@ -301,7 +301,14 @@
                   >Edit</button>
                 {/if}
               </td>
-              <td>{meetingData.title}{#if isUrl(meetingData.meetingUrl)}<span class="px-2" title="Has a video conferencing link">🎥</span>{/if}</td>
+              <td>
+                {meetingData.title}{#if isUrl(meetingData.meetingUrl)}
+                  <span
+                    class="px-2"
+                    title="Has a video conferencing link"
+                  >🎥</span>
+                {/if}
+              </td>
               <td>{meetingData.subTitle}</td>
               <td>{getStartTime(meetingData)}</td>
               <td>{meetingData.lengthInMinutes} mins</td>
@@ -328,7 +335,11 @@
                 class="edit-meeting-form-row has-background-white-ter"
               >
                 <td colspan="7">
-                  <form class="section pt-0" on:submit={saveMeeting} on:reset={cancelEdit}>
+                  <form
+                    class="section pt-0"
+                    on:submit="{saveMeeting}"
+                    on:reset="{cancelEdit}"
+                  >
                     <!--                <h2 class="subtitle is-2">Edit Meeting Details</h2>-->
 
                     <!--    <label class="label ">Meeting id</label>-->
@@ -354,7 +365,10 @@
                     </div>
 
                     <div class="field">
-                      <label for="meeting-subtitle" class="label">Subtitle</label>
+                      <label
+                        for="meeting-subtitle"
+                        class="label"
+                      >Subtitle</label>
                       <div class="control">
                         <input
                           id="meeting-subtitle"
@@ -367,7 +381,10 @@
                     </div>
 
                     <div class="field">
-                      <label for="meeting-description" class="label">Description</label>
+                      <label
+                        for="meeting-description"
+                        class="label"
+                      >Description</label>
                       <div class="control">
                         <textarea
                           id="meeting-description"
@@ -381,7 +398,8 @@
 
                     <div class="columns">
                       <div class="column">
-                        <label for="days-of-the-week" class="label">Days of the Week</label>
+                        <label for="days-of-the-week" class="label">Days of the
+                          Week</label>
                         <div id="days-of-the-week" class="field has-addons">
                           {#each daysOfWeek as day, idx}
                             <div class="control">
@@ -396,7 +414,8 @@
                       </div>
 
                       <div class="column time-input-container">
-                        <label for="start-time-hour" class="label">Start Time (24h)</label>
+                        <label for="start-time-hour" class="label">Start Time
+                          (24h)</label>
                         <div class="control">
                           <input
                             id="start-time-hour"
@@ -419,7 +438,8 @@
                         </div>
                       </div>
                       <div class="column">
-                        <label for="meeting-duration" class="label">Duration in Minutes (1-1440)</label>
+                        <label for="meeting-duration" class="label">Duration in
+                          Minutes (1-1440)</label>
                         <div class="control">
                           <input
                             id="meeting-duration"
@@ -435,7 +455,8 @@
                     </div>
 
                     <div class="field">
-                      <label for="meeting-url" class="label">Video Conferencing Link (must begin with http:// or https://)</label>
+                      <label for="meeting-url" class="label">Video Conferencing
+                        Link (must begin with http:// or https://)</label>
                       <div class="control">
                         <input
                           id="meeting-url"
