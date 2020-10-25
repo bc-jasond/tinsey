@@ -404,6 +404,7 @@
                           {#each daysOfWeek as day, idx}
                             <div class="control">
                               <button
+                                type="button"
                                 class="button"
                                 class:is-info="{meeting.days[idx]}"
                                 on:click="{() => updateDayOfWeek(idx)}"
