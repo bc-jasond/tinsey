@@ -19,14 +19,16 @@
   }
 </style>
 
-<div
+<a
+  href="."
   class="burger"
   class:abs="{isAbs}"
-  on:click="{() => {
+  on:click="{(e) => {
+    e.preventDefault();
     /* for mobile Safari... */
   }}"
   on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
   title="Double-click me to show/hide the menu bar"
 >
   🍔
-</div>
+</a>
