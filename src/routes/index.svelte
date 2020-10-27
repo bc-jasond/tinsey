@@ -76,6 +76,10 @@
       const maybeMeeting = getCurrentMeeting(now, meetingsForToday);
       meeting = maybeMeeting ? { ...maybeMeeting } : maybeMeeting;
     }, 1000);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('hideNav') === '1') {
+      $shouldShowNav = false;
+    };
     return () => {
       clearInterval(intervalId);
     };
