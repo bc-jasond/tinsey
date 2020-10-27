@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
-  import { isUrl } from '../common/utils';
+  import { isUrl, getShortTime, getDayOfTheWeek, getDate } from '../common/utils';
   import { currentGoogleUser, shouldShowNav } from '../stores';
 
   function getStartAndEndTimeInMs(meetingArg) {
@@ -40,15 +40,6 @@
     date.setHours(hour);
     date.setMinutes(minute);
     return date;
-  }
-  function getShortTime(date) {
-    return date.toLocaleString('en-US', { timeStyle: 'short' });
-  }
-  function getDayOfTheWeek(date) {
-    return date.toLocaleString('en-US', { weekday: 'long' });
-  }
-  function getDate(date) {
-    return date.toLocaleString('en-US', { dateStyle: 'long' });
   }
 
   let intervalId;

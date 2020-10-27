@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
 
   import { currentGoogleUser, shouldShowNav } from '../stores';
-  import { isUrl } from '../common/utils';
+  import { isUrl, getShortTime } from '../common/utils';
 
   const tempMeetingId = 'new';
   const meetingTemplate = {
@@ -104,7 +104,7 @@
     date.setSeconds(0);
     date.setMinutes(meetingArg.startTimeMinute);
     date.setHours(meetingArg.startTimeHour);
-    return date.toLocaleString('en-US', { timeStyle: 'short' });
+    return getShortTime(date);
   }
   function updateDayOfWeek(idx) {
     meeting.days[idx] = !meeting.days[idx];
