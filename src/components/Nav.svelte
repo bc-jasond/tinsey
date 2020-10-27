@@ -2,7 +2,7 @@
   export let segment;
 
   import { onDestroy } from 'svelte';
-  import { scale, fly } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { GoogleAuth, currentGoogleUser, shouldShowNav } from '../stores';
   import Burger from './Burger.svelte';
 
@@ -44,13 +44,9 @@
 <style>
 </style>
 
-{#if $shouldShowNav}
-  <nav
-    class="level p-3 m-0"
-    out:scale|local
-    in:fly|local="{{ y: 100, duration: 250 }}"
-  >
-    <ul class="level-left">
+<nav class="level p-3 m-0">
+  {#if $shouldShowNav}
+    <ul transition:fade|local="{{ duration: 250 }}" class="level-left">
       <li class="level-item">
         <h1
           class="title is-family-monospace has-text-grey"
@@ -78,8 +74,12 @@
         </li>
       {/if}
     </ul>
-    <ul class="level-right">
-      <li class="level-item">
+  {:else}
+    <ul class="level-left"></ul>
+  {/if}
+  <ul class="level-right">
+    {#if $shouldShowNav}
+      <li transition:fade|local="{{ duration: 250 }}" class="level-item">
         {#if !$currentGoogleUser}
           <button class="button" on:click="{doLoginGoogle}">login with Google</button>
         {:else}
@@ -90,9 +90,9 @@
             ({$currentGoogleUser.email})</button>
         {/if}
       </li>
-      <li>
-        <Burger />
-      </li>
-    </ul>
-  </nav>
-{/if}
+    {/if}
+    <li>
+      <Burger />
+    </li>
+  </ul>
+</nav>

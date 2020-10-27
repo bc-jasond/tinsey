@@ -111,7 +111,7 @@
 </svelte:head>
 
 {#if $shouldShowNav}
-  <section class="section p-0 is-fullwidth">
+  <section class="section p-0 pb-6 is-fullwidth">
     <div class="hero">
       <div class="hero-body p-2 has-background-info-light has-text-centered">
         <div class="container">
@@ -127,7 +127,7 @@
   </section>
 {/if}
 <div class="container is-max-widescreen">
-  <section class="section">
+  <section class="section pt-0">
     <nav class="level is-family-code has-text-grey">
       <div class="level-left">
         <div class="level-item">

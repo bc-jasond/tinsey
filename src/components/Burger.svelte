@@ -11,24 +11,12 @@
     user-select: none;
     line-height: 1;
   }
-  .abs {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0.75rem;
-  }
 </style>
 
-<a
-  href="."
+<span
   class="burger"
-  class:abs="{isAbs}"
-  on:click="{(e) => {
-    e.preventDefault();
-    /* for mobile Safari... */
-  }}"
   on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
   title="Double-click me to show/hide the menu bar"
 >
   🍔
-</a>
+</span>
