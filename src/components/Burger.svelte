@@ -22,6 +22,9 @@
 <div
   class="burger"
   class:abs="{isAbs}"
+  on:click="{() => {
+    /* for mobile Safari... */
+  }}"
   on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
   title="Double-click me to show/hide the menu bar"
 >
