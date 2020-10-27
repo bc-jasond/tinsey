@@ -4,6 +4,7 @@
   import { onDestroy } from 'svelte';
   import { scale, fly } from 'svelte/transition';
   import { GoogleAuth, currentGoogleUser, shouldShowNav } from '../stores';
+  import Burger from './Burger.svelte';
 
   import { googleAuth, getGoogleUser } from '../common/google-auth';
 
@@ -51,7 +52,12 @@
   >
     <ul class="level-left">
       <li class="level-item">
-        <h1 class="title is-family-monospace has-text-grey" style="font-weight: 100">tinsey</h1>
+        <h1
+          class="title is-family-monospace has-text-grey"
+          style="font-weight: 100"
+        >
+          tinsey
+        </h1>
       </li>
       <li class="level-item">
         <a
@@ -83,6 +89,9 @@
           >{$currentGoogleUser.givenName}
             ({$currentGoogleUser.email})</button>
         {/if}
+      </li>
+      <li>
+        <Burger />
       </li>
     </ul>
   </nav>

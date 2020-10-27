@@ -27,20 +27,41 @@ function getShortTime(date) {
   const isAm = hours < 12;
   let displayHours = hours > 12 ? hours - 12 : hours;
   displayHours = displayHours === 0 ? 12 : displayHours;
-  const minutes = `${date.getMinutes()}`.padStart(2, '0')
-  return `${displayHours}:${minutes} ${isAm ? 'AM' : 'PM'}`
+  const minutes = `${date.getMinutes()}`.padStart(2, '0');
+  return `${displayHours}:${minutes} ${isAm ? 'AM' : 'PM'}`;
 }
 
 function getDayOfTheWeek(date) {
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
   return days[date.getDay()];
   // TODO: inconsistent on iOS
   // date.toLocaleString('en-US', { weekday: 'long' });
 }
 
 function getDate(date) {
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December']
-  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   // TODO: inconsistent on iOS
   // date.toLocaleString('en-US', { dateStyle: 'long' });
 }

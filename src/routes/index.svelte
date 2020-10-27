@@ -2,7 +2,12 @@
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
-  import { isUrl, getShortTime, getDayOfTheWeek, getDate } from '../common/utils';
+  import {
+    isUrl,
+    getShortTime,
+    getDayOfTheWeek,
+    getDate,
+  } from '../common/utils';
   import { currentGoogleUser, shouldShowNav } from '../stores';
 
   function getStartAndEndTimeInMs(meetingArg) {
@@ -79,7 +84,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('hideNav') === '1') {
       $shouldShowNav = false;
-    };
+    }
     return () => {
       clearInterval(intervalId);
     };
@@ -87,9 +92,6 @@
 </script>
 
 <style>
-  .open-nav {
-    cursor: pointer;
-  }
   @keyframes blink {
     from,
     to {
@@ -108,22 +110,22 @@
   <title>Tinsey | Where am I supposed to be rn?</title>
 </svelte:head>
 
-<section class="section p-0 is-fullwidth">
-  <div class="hero">
-    <div class="hero-body p-2 has-background-info-light has-text-centered">
-      <div class="container">
-        <h1
-          class="title is-family-sans-serif m-0 open-nav"
-          title="Double-click me to show/hide the menu bar above..."
-          style="font-size: 3rem;"
-          on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
-        >
-          Where am I supposed to be rn? 🤔
-        </h1>
+{#if $shouldShowNav}
+  <section class="section p-0 is-fullwidth">
+    <div class="hero">
+      <div class="hero-body p-2 has-background-info-light has-text-centered">
+        <div class="container">
+          <h1
+            class="title is-family-sans-serif m-0 open-nav"
+            style="font-size: 3rem;"
+          >
+            Where am I supposed to be rn? 🤔
+          </h1>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+{/if}
 <div class="container is-max-widescreen">
   <section class="section">
     <nav class="level is-family-code has-text-grey">
