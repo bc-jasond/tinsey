@@ -161,67 +161,79 @@
         <div
           in:fly|local="{{ y: 200, duration: 250, delay: 150 }}"
           out:fade|local="{{ duration: 200 }}"
-          class="card"
         >
-          <div class="card-header has-background-info-light p-3">
-            <div class="card-header-title is-centered">
-              <h1 class="title m-0" style="font-size: 5rem;">
-                {meeting.title}
-              </h1>
+          {#if isUrl(meeting.meetingUrl)}
+            <div class="section p-4 has-text-centered">
+              <a
+                class="button is-large is-link"
+                href="{meeting.meetingUrl}"
+                target="_blank"
+                rel="noreferrer"
+                style="height: unset;"
+              ><h1 class="is-1 m-1">Join Meeting</h1></a>
             </div>
-          </div>
-          <div class="card-content has-text-centered">
-            <h2 class="subtitle m-0 is-1">{meeting.subTitle}</h2>
-          </div>
-          <div
-            class="card-content has-text-centered has-text-light has-background-grey p-1"
-          >
-            <div class="columns">
-              <div class="column">
-                <p class="content is-size-3">
-                  Starts at
-                  {getShortTime(getMeetingStartTimeToday(meeting.startTimeHour, meeting.startTimeMinute))}
-                </p>
-              </div>
-              <div class="column">
-                <p class="content is-size-3">
-                  is
-                  {meeting.lengthInMinutes}
-                  minute{meeting.lengthInMinutes !== 1 ? 's' : ''}
-                  long
-                </p>
-              </div>
-              <div class="column">
-                <p class="content is-size-3 is-italic">
-                  there's
-                  {minutesLeft}
-                  minute{minutesLeft !== 1 ? 's' : ''}
-                  left
-                </p>
+          {/if}
+          <div class="card">
+            <div class="card-header has-background-info-light p-3">
+              <div class="card-header-title is-centered">
+                <h1 class="title m-0" style="font-size: 5rem;">
+                  {meeting.title}
+                </h1>
               </div>
             </div>
-          </div>
-          <div class="card-content has-text-centered">
-            <p class="content is-size-4 m-6">
-              {@html meeting.description}
-            </p>
-          </div>
-          <div class="card-footer p-5">
-            <div class="card-footer-item">
-              {#if isUrl(meeting.meetingUrl)}
-                <a
-                  class="button is-large is-link"
-                  href="{meeting.meetingUrl}"
-                  target="_blank"
-                  rel="noreferrer"
-                  style="height: unset;"
-                ><h1 class="is-1 m-1">Join Meeting</h1></a>
-              {:else}
-                <span
-                  class="button is-large is-static"
-                  style="height: unset;"
-                ><h1 class="is-1 m-1">No (or invalid) Meeting Link</h1></span>
-              {/if}
+            <div class="card-content has-text-centered">
+              <h2 class="subtitle m-0 is-1">{meeting.subTitle}</h2>
+            </div>
+            <div
+              class="card-content has-text-centered has-text-light has-background-grey p-1"
+            >
+              <div class="columns">
+                <div class="column">
+                  <p class="content is-size-3">
+                    Starts at
+                    {getShortTime(getMeetingStartTimeToday(meeting.startTimeHour, meeting.startTimeMinute))}
+                  </p>
+                </div>
+                <div class="column">
+                  <p class="content is-size-3">
+                    is
+                    {meeting.lengthInMinutes}
+                    minute{meeting.lengthInMinutes !== 1 ? 's' : ''}
+                    long
+                  </p>
+                </div>
+                <div class="column">
+                  <p class="content is-size-3 is-italic">
+                    there's
+                    {minutesLeft}
+                    minute{minutesLeft !== 1 ? 's' : ''}
+                    left
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="card-content has-text-centered">
+              <p class="content is-size-4 m-6">
+                {@html meeting.description}
+              </p>
+            </div>
+            <div class="card-footer p-5">
+              <div class="card-footer-item">
+                {#if isUrl(meeting.meetingUrl)}
+                  <a
+                    class="button is-large is-link"
+                    href="{meeting.meetingUrl}"
+                    target="_blank"
+                    rel="noreferrer"
+                    style="height: unset;"
+                  ><h1 class="is-1 m-1">Join Meeting</h1></a>
+                {:else}
+                  <span
+                    class="button is-large is-static"
+                    style="height: unset;"
+                  ><h1 class="is-1 m-1">No (or invalid) Meeting Link</h1></span>
+                {/if}
+              </div>
             </div>
           </div>
         </div>

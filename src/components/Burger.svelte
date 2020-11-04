@@ -1,6 +1,4 @@
 <script>
-  export let isAbs = false;
-
   import { shouldShowNav } from '../stores';
 </script>
 
