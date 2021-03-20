@@ -13,8 +13,8 @@
 
 <span
   class="burger"
-  on:dblclick="{() => ($shouldShowNav = !$shouldShowNav)}"
-  title="Double-click me to show/hide the menu bar"
+  on:click="{() => ($shouldShowNav = !$shouldShowNav)}"
+  title="Click me to show/hide the menu bar"
 >
   🍔
 </span>
