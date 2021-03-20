@@ -18,6 +18,7 @@ const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
 const env = {
+	preventAssignment: true,
 	'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 	'process.env.GOOGLE_API_FILBERT_CLIENT_ID': JSON.stringify(process.env.GOOGLE_API_FILBERT_CLIENT_ID)
 }
@@ -37,9 +38,11 @@ export default {
 				...env
 			}),
 			svelte({
-				dev,
-				hydratable: true,
-				emitCss: true
+				emitCss: true,
+				compilerOptions: {
+					dev,
+					hydratable: true
+				}
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
@@ -74,7 +77,7 @@ export default {
 		],
 
 		preserveEntrySignatures: false,
-		onwarn,
+		onwarn
 	},
 
 	server: {
@@ -86,9 +89,11 @@ export default {
 				...env,
 			}),
 			svelte({
-				generate: 'ssr',
-				hydratable: true,
-				dev
+				compilerOptions: {
+					generate: 'ssr',
+					hydratable: true,
+					dev
+				}, emitCss: false
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
@@ -101,25 +106,7 @@ export default {
 			commonjs()
 		],
 		external: Object.keys(pkg.dependencies).concat(require('module').builtinModules),
-
 		preserveEntrySignatures: 'strict',
-		onwarn,
-	},
-
-	serviceworker: {
-		input: config.serviceworker.input(),
-		output: config.serviceworker.output(),
-		plugins: [
-			resolve(),
-			replace({
-				'process.browser': true,
-				...env
-			}),
-			commonjs(),
-			!dev && terser()
-		],
-
-		preserveEntrySignatures: false,
-		onwarn,
+		onwarn
 	}
 };
